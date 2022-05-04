@@ -47,8 +47,24 @@ public class Client : MonoBehaviour
 
     public void SendOnClick()
     {
+        SendMessage();
+    }
+
+    // this is called on submit and deselect. make sure message is only sent on submit
+    public void OnEndEdit()
+    {
+        if(Input.GetButtonDown("Submit"))
+        {
+            SendMessage();
+        }
+    }
+
+    private void SendMessage()
+    {
         string data = message.text;
         Send(data);
+
+        message.text = "";
     }
 
     private void Update()
