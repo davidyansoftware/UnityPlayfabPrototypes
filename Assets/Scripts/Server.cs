@@ -39,9 +39,7 @@ public class Server : MonoBehaviour
     {
         //TODO only tick every ~5 seconds
 
-        if (!serverStarted) {
-            return; // only on startup error
-        }
+        if (!serverStarted) return;
 
         foreach (ServerClient client in clients)
         {
@@ -52,11 +50,9 @@ public class Server : MonoBehaviour
                 continue;
             }
 
-            NetworkStream stream = client.tcpClient.GetStream();
-            if (stream.DataAvailable)
+            if (client.stream.DataAvailable)
             {
-                StreamReader reader = new StreamReader(stream, true);
-                string data = reader.ReadLine();
+                string data = client.reader.ReadLine();
 
                 if (data != null)
                 {
@@ -101,8 +97,6 @@ public class Server : MonoBehaviour
         {
             if (c.Client.Poll(0, SelectMode.SelectRead))
             {
-                //return !(c.Client.Receive(new byte[1], SocketFlags.Peek) == 0);
-
                 int pingResponse = c.Client.Receive(new byte[1], SocketFlags.Peek);
                 bool pingReceived = pingResponse != 0;
 
@@ -118,11 +112,8 @@ public class Server : MonoBehaviour
         }
     }
 
-    //TODO this should probably be a part of serverclient
     private void OnIncomingData(ServerClient client, string data)
     {
-        //Debug.Log(client.clientName + ": " + data);
-
         if(data.Contains("&NAME")) {
             client.clientName = data.Split('|')[1];
 
@@ -142,10 +133,8 @@ public class Server : MonoBehaviour
         {
             try
             {
-                //TODO can probably store this writer with the client to reduce garbage
-                StreamWriter writer = new StreamWriter(client.tcpClient.GetStream());
-                writer.WriteLine(data);
-                writer.Flush();
+                client.writer.WriteLine(data);
+                client.writer.Flush();
             }
             catch (Exception e)
             {
@@ -160,9 +149,17 @@ public class ServerClient
     public TcpClient tcpClient;
     public string clientName;
 
+    public readonly NetworkStream stream;
+    public readonly StreamReader reader;
+    public readonly StreamWriter writer;
+
     public ServerClient(TcpClient tcpClient)
     {
-        clientName = "Guest";
+        clientName = "GUEST";
         this.tcpClient = tcpClient;
+
+        stream = tcpClient.GetStream();
+        reader = new StreamReader(stream, true);
+        writer = new StreamWriter(stream);
     }
 }
