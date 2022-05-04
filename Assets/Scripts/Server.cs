@@ -5,19 +5,34 @@ using System.Net.Sockets;
 using System;
 using System.IO;
 using System.Net;
+using PlayFab;
 
 public class Server : MonoBehaviour
 {
     public int port = 6321;
 
     private TcpListener server;
-
+    
+    //TODO some way to consolidate these?
     private List<ServerClient> clients = new List<ServerClient>();
     private List<ServerClient> disconnectedClients = new List<ServerClient>();
 
     private bool serverStarted = false;
 
     private void Start()
+    {
+        PlayFabMultiplayerAgentAPI.Start();
+        PlayFabMultiplayerAgentAPI.OnServerActiveCallback += OnServerActive;
+
+        StartCoroutine(ReadyForPlayers());
+    }
+
+    private void OnServerActive()
+    {
+        StartCustomChatServer();
+    }
+
+    private void StartCustomChatServer()
     {
         try
         {
@@ -28,11 +43,19 @@ public class Server : MonoBehaviour
             serverStarted = true;
 
             Debug.Log("Server started on port: " + port.ToString());
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             //TODO handle specific exceptions
             Debug.Log("Socket error: " + e.Message);
         }
+    }
+
+    IEnumerator ReadyForPlayers()
+    {
+        // not clear why delay is required
+        yield return new WaitForSeconds(.5f);
+        PlayFabMultiplayerAgentAPI.ReadyForPlayers();
     }
 
     private void Update()
