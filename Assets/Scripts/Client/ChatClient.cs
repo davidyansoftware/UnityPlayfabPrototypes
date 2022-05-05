@@ -1,10 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System.Net.Sockets;
-using System.IO;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net.Sockets;
+using UnityEngine;
 using PlayFab;
+using PlayFab.ClientModels;
 using PlayFab.MultiplayerModels;
 
 public class ChatClient : MonoBehaviour
@@ -28,10 +28,55 @@ public class ChatClient : MonoBehaviour
         if (localClient)
         {
             Connect("127.0.0.1", port);
-        } else
-        {
-            RequestMultiplayerServer();
         }
+        else
+        {
+            LoginRemoteUser();
+        }
+    }
+
+    private void LoginRemoteUser()
+    {
+        Debug.Log("[ClientStartUp].LoginRemoteUser");
+
+        //We need to login a user to get at PlayFab API's. 
+        LoginWithCustomIDRequest request = new LoginWithCustomIDRequest()
+        {
+            TitleId = PlayFabSettings.TitleId,
+            CreateAccount = true,
+            CustomId = generateGUID()
+        };
+
+        PlayFabClientAPI.LoginWithCustomID(request, OnPlayFabLoginSuccess, OnLoginError);
+    }
+
+    private string generateGUID()
+    {
+        var random = new System.Random();
+        DateTime epochStart = new DateTime(1970, 1, 1, 8, 0, 0, System.DateTimeKind.Utc);
+        double timestamp = (DateTime.UtcNow - epochStart).TotalSeconds;
+
+        string uniqueID = String.Format("{0:X}", Convert.ToInt32(timestamp))                //Time
+                        + "-" + String.Format("{0:X}", random.Next(1000000000))                   //Random Number
+                        + "-" + String.Format("{0:X}", random.Next(1000000000))                 //Random Number
+                        + "-" + String.Format("{0:X}", random.Next(1000000000))                  //Random Number
+                        + "-" + String.Format("{0:X}", random.Next(1000000000));                  //Random Number
+
+        Debug.Log(uniqueID);
+
+        return uniqueID;
+    }
+
+    private void OnPlayFabLoginSuccess(LoginResult response)
+    {
+        Debug.Log(response.ToString());
+
+        RequestMultiplayerServer();
+    }
+
+    private void OnLoginError(PlayFabError response)
+    {
+        Debug.Log(response.ToString());
     }
 
     private void RequestMultiplayerServer()
@@ -40,8 +85,7 @@ public class ChatClient : MonoBehaviour
         RequestMultiplayerServerRequest requestData = new RequestMultiplayerServerRequest();
         requestData.BuildId = buildId;
         requestData.SessionId = System.Guid.NewGuid().ToString();
-        //TODO fix typeing error here
-        //requestData.PreferredRegions = new List<AzureRegion>() { AzureRegion.EastUs };
+        requestData.PreferredRegions = new List<string>() { "EastUs" };
         PlayFabMultiplayerAPI.RequestMultiplayerServer(requestData, OnRequestMultiplayerServer, OnRequestMultiplayerServerError);
     }
 
@@ -56,7 +100,7 @@ public class ChatClient : MonoBehaviour
 
     private void OnRequestMultiplayerServerError(PlayFabError error)
     {
-        Debug.Log(error.ErrorDetails);
+        Debug.Log(error);
     }
 
     private void Connect(string host, int port)
