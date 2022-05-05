@@ -9,8 +9,8 @@ public class ChatClient : MonoBehaviour
 {
     public ChatUI chatUI;
 
+    public bool localClient;
     public string clientName;
-    public string host = "127.0.0.1";
     public int port = 6321;
 
     private bool connected = false;
@@ -21,6 +21,12 @@ public class ChatClient : MonoBehaviour
     private StreamReader reader;
 
     public void ConnectOnClick()
+    {
+        Connect("127.0.0.1", port);
+        
+    }
+
+    private void Connect(string host, int port)
     {
         if (connected) return;
 
