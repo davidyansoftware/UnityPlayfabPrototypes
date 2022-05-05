@@ -4,6 +4,8 @@ using UnityEngine;
 using System.Net.Sockets;
 using System.IO;
 using System;
+using PlayFab;
+using PlayFab.MultiplayerModels;
 
 public class ChatClient : MonoBehaviour
 {
@@ -11,6 +13,7 @@ public class ChatClient : MonoBehaviour
 
     public bool localClient;
     public string clientName;
+    public string buildId;
     public int port = 6321;
 
     private bool connected = false;
@@ -22,8 +25,38 @@ public class ChatClient : MonoBehaviour
 
     public void ConnectOnClick()
     {
-        Connect("127.0.0.1", port);
-        
+        if (localClient)
+        {
+            Connect("127.0.0.1", port);
+        } else
+        {
+            RequestMultiplayerServer();
+        }
+    }
+
+    private void RequestMultiplayerServer()
+    {
+        Debug.Log("[ClientStartUp].RequestMultiplayerServer");
+        RequestMultiplayerServerRequest requestData = new RequestMultiplayerServerRequest();
+        requestData.BuildId = buildId;
+        requestData.SessionId = System.Guid.NewGuid().ToString();
+        //TODO fix typeing error here
+        //requestData.PreferredRegions = new List<AzureRegion>() { AzureRegion.EastUs };
+        PlayFabMultiplayerAPI.RequestMultiplayerServer(requestData, OnRequestMultiplayerServer, OnRequestMultiplayerServerError);
+    }
+
+    private void OnRequestMultiplayerServer(RequestMultiplayerServerResponse response)
+    {
+        Debug.Log(response.ToString());
+        string host = response.IPV4Address;
+        int port = (ushort)response.Ports[0].Num;
+
+        Connect(host, port);
+    }
+
+    private void OnRequestMultiplayerServerError(PlayFabError error)
+    {
+        Debug.Log(error.ErrorDetails);
     }
 
     private void Connect(string host, int port)

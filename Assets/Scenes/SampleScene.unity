@@ -1188,8 +1188,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chatUI: {fileID: 1454186451}
+  localClient: 1
   clientName: uniteditor
-  host: 127.0.0.1
+  buildId: c6921a4e-159f-4052-ac8d-216697ae5aba
   port: 6321
 --- !u!4 &1827701287
 Transform:
