@@ -1,38 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Net.Sockets;
 using System;
 using System.IO;
 using System.Net;
-using PlayFab;
+using System.Net.Sockets;
 
-public class Server : MonoBehaviour
+public class ChatServer
 {
-    public int port = 6321;
-
     private TcpListener server;
-    
-    //TODO some way to consolidate these?
+
     private List<ServerClient> clients = new List<ServerClient>();
     private List<ServerClient> disconnectedClients = new List<ServerClient>();
 
     private bool serverStarted = false;
 
-    private void Start()
-    {
-        PlayFabMultiplayerAgentAPI.Start();
-        PlayFabMultiplayerAgentAPI.OnServerActiveCallback += OnServerActive;
-
-        StartCoroutine(ReadyForPlayers());
-    }
-
-    private void OnServerActive()
-    {
-        StartCustomChatServer();
-    }
-
-    private void StartCustomChatServer()
+    public void StartServer(int port)
     {
         try
         {
@@ -51,17 +34,8 @@ public class Server : MonoBehaviour
         }
     }
 
-    IEnumerator ReadyForPlayers()
+    public void Tick()
     {
-        // not clear why delay is required
-        yield return new WaitForSeconds(.5f);
-        PlayFabMultiplayerAgentAPI.ReadyForPlayers();
-    }
-
-    private void Update()
-    {
-        //TODO only tick every ~5 seconds
-
         if (!serverStarted) return;
 
         foreach (ServerClient client in clients)
@@ -84,7 +58,7 @@ public class Server : MonoBehaviour
             }
         }
 
-        foreach(ServerClient disconnectedClient in disconnectedClients)
+        foreach (ServerClient disconnectedClient in disconnectedClients)
         {
             Broadcast(disconnectedClient.clientName + " has disconnected", clients);
 
@@ -137,7 +111,8 @@ public class Server : MonoBehaviour
 
     private void OnIncomingData(ServerClient client, string data)
     {
-        if(data.Contains("&NAME")) {
+        if (data.Contains("&NAME"))
+        {
             client.clientName = data.Split('|')[1];
 
             string connectionMessage = client.clientName + " has connected";

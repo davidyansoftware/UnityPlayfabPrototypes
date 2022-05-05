@@ -1,19 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using System.Net.Sockets;
 using System.IO;
 using System;
 
-public class Client : MonoBehaviour
+public class ChatClient : MonoBehaviour
 {
-    public GameObject chatContainer;
-    public MessagePrefab messagePrefab;
+    public ChatUI chatUI;
 
     public string clientName;
-    public InputField message;
-
     public string host = "127.0.0.1";
     public int port = 6321;
 
@@ -45,26 +41,10 @@ public class Client : MonoBehaviour
         }
     }
 
-    public void SendOnClick()
+    // Start is called before the first frame update
+    void Start()
     {
-        SendMessage();
-    }
-
-    // this is called on submit and deselect. make sure message is only sent on submit
-    public void OnEndEdit()
-    {
-        if(Input.GetButtonDown("Submit"))
-        {
-            SendMessage();
-        }
-    }
-
-    private void SendMessage()
-    {
-        string data = message.text;
-        Send(data);
-
-        message.text = "";
+        chatUI.OnSendMessage = Send;
     }
 
     private void Update()
@@ -81,6 +61,15 @@ public class Client : MonoBehaviour
         }
     }
 
+    private void OnApplicationQuit()
+    {
+        Disconnect();
+    }
+    private void OnDisable()
+    {
+        Disconnect();
+    }
+
     private void OnIncomingData(string data)
     {
         //Debug.Log("Client: " + data);
@@ -92,8 +81,7 @@ public class Client : MonoBehaviour
             return;
         }
 
-        MessagePrefab message = GameObject.Instantiate(messagePrefab, chatContainer.transform);
-        message.Setup(data);
+        chatUI.AppendMessage(data);
     }
 
     private void Send(string data)
@@ -114,12 +102,4 @@ public class Client : MonoBehaviour
         connected = false;
     }
 
-    private void OnApplicationQuit()
-    {
-        Disconnect();
-    }
-    private void OnDisable()
-    {
-        Disconnect();
-    }
 }
