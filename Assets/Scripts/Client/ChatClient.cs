@@ -31,7 +31,7 @@ public class ChatClient : MonoBehaviour
         else
         {
             PlayfabLogIn login = new PlayfabLogIn();
-            login.Login(RequestMultiplayerServer);
+            login.AnonymousLogin(RequestMultiplayerServer);
         }
     }
 

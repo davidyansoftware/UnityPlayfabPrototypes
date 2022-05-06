@@ -12,7 +12,7 @@ public class PlayfabLogIn
 
     private Action successCallback;
 
-    public void Login(Action successCallback)
+    public void AnonymousLogin(Action successCallback)
     {
         Debug.Log("[ClientStartUp].LoginRemoteUser");
 
@@ -74,5 +74,24 @@ public class PlayfabLogIn
     {
         Debug.Log(response.ToString());
     }
+
+    //TODO
+    // register account
+    // login facebook
+    // login google
+    // add login
+    private void AddLogin(string displayName, string email, string password)
+    {
+        AddUsernamePasswordRequest request = new AddUsernamePasswordRequest { Username = displayName, Email = email, Password = password };
+        PlayFabClientAPI.AddUsernamePassword(request, OnAddLoginSuccess, OnAddLoginError);
+    }
+    private void OnAddLoginSuccess(AddUsernamePasswordResult response)
+    {
+        //TODO store data locally
+    }
+    private void OnAddLoginError(PlayFabError response) {
+        Debug.Log(response.ToString());
+    }
+
 }
 
