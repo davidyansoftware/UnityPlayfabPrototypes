@@ -4,7 +4,6 @@ using System.IO;
 using System.Net.Sockets;
 using UnityEngine;
 using PlayFab;
-using PlayFab.ClientModels;
 using PlayFab.MultiplayerModels;
 
 public class ChatClient : MonoBehaviour
@@ -31,52 +30,9 @@ public class ChatClient : MonoBehaviour
         }
         else
         {
-            LoginRemoteUser();
+            PlayfabLogIn login = new PlayfabLogIn();
+            login.Login(RequestMultiplayerServer);
         }
-    }
-
-    private void LoginRemoteUser()
-    {
-        Debug.Log("[ClientStartUp].LoginRemoteUser");
-
-        //We need to login a user to get at PlayFab API's. 
-        LoginWithCustomIDRequest request = new LoginWithCustomIDRequest()
-        {
-            TitleId = PlayFabSettings.TitleId,
-            CreateAccount = true,
-            CustomId = generateGUID()
-        };
-
-        PlayFabClientAPI.LoginWithCustomID(request, OnPlayFabLoginSuccess, OnLoginError);
-    }
-
-    private string generateGUID()
-    {
-        var random = new System.Random();
-        DateTime epochStart = new DateTime(1970, 1, 1, 8, 0, 0, System.DateTimeKind.Utc);
-        double timestamp = (DateTime.UtcNow - epochStart).TotalSeconds;
-
-        string uniqueID = String.Format("{0:X}", Convert.ToInt32(timestamp))                //Time
-                        + "-" + String.Format("{0:X}", random.Next(1000000000))                   //Random Number
-                        + "-" + String.Format("{0:X}", random.Next(1000000000))                 //Random Number
-                        + "-" + String.Format("{0:X}", random.Next(1000000000))                  //Random Number
-                        + "-" + String.Format("{0:X}", random.Next(1000000000));                  //Random Number
-
-        Debug.Log(uniqueID);
-
-        return uniqueID;
-    }
-
-    private void OnPlayFabLoginSuccess(LoginResult response)
-    {
-        Debug.Log(response.ToString());
-
-        RequestMultiplayerServer();
-    }
-
-    private void OnLoginError(PlayFabError response)
-    {
-        Debug.Log(response.ToString());
     }
 
     private void RequestMultiplayerServer()
