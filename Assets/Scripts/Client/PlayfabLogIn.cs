@@ -79,7 +79,6 @@ public class PlayfabLogIn
     // register account
     // login facebook
     // login google
-    // add login
     private void AddLogin(string displayName, string email, string password)
     {
         AddUsernamePasswordRequest request = new AddUsernamePasswordRequest { Username = displayName, Email = email, Password = password };
