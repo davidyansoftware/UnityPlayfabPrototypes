@@ -108,14 +108,18 @@ public class LeaderboardController : MonoBehaviour
             string displayName = opponent.DisplayName;
             int rating = opponent.StatValue;
             int power = 0; //TODO get power from leaderboard/data
-            prefab.SetName(displayName);
-            prefab.SetRatingPower(rating, power);
+
+            GetLeaderboardAroundPlayerRequest request = new GetLeaderboardAroundPlayerRequest();
+            request.StatisticName = POWER_KEY;
+            request.MaxResultsCount = 1;
+            PlayFabClientAPI.GetLeaderboardAroundPlayer(request, (GetLeaderboardAroundPlayerResult opponentResult) =>
+            {
+                power = opponentResult.Leaderboard[0].StatValue;
+                prefab.SetName(displayName);
+                prefab.SetRatingPower(rating, power);
+            },
+            OnNetworkError);
         }
-    }
-
-    private void FetchOpponent()
-    {
-
     }
 
     private void OnNetworkError(PlayFabError error)
