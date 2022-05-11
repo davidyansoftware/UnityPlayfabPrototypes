@@ -12,8 +12,11 @@ public class Opponent : MonoBehaviour
     public Text rating;
     public Text power;
 
-    public void SetName(string opponentName)
+    private string playfabId;
+
+    public void SetPlayer(string playfabId, string opponentName)
     {
+        this.playfabId = playfabId;
         this.opponentName.text = opponentName;
     }
 
@@ -25,6 +28,19 @@ public class Opponent : MonoBehaviour
 
     public void OnClick()
     {
+        Battle(player.PlayfabId, this.playfabId);
+    }
 
+    private void Battle(string playerId, string opponentId)
+    {
+        Debug.Log("PlayerId: " + playerId + "\nOpponentId: " + opponentId);
+
+        // fetch stats of both players
+
+        // simulate battle
+
+        // increment decrement rating of both
+
+        // return result - rating change?
     }
 }

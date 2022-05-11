@@ -10,8 +10,18 @@ public class Player : MonoBehaviour
     public Text rating;
     public Text power;
 
-    public void SetName(string playerName)
+    private string playfabId;
+    public string PlayfabId
     {
+        get
+        {
+            return playfabId;
+        }
+    }
+
+    public void SetPlayer(string playfabId, string playerName)
+    {
+        this.playfabId = playfabId;
         this.playerName.text = playerName;
     }
 

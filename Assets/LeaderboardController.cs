@@ -37,8 +37,9 @@ public class LeaderboardController : MonoBehaviour
     }
     private void DrawPlayerName(GetAccountInfoResult result)
     {
+        string playfabId = result.AccountInfo.PlayFabId;
         string displayName = result.AccountInfo.TitleInfo.DisplayName;
-        player.SetName(displayName);
+        player.SetPlayer(playfabId, displayName);
     }
 
     private void FetchPlayer()
@@ -72,12 +73,6 @@ public class LeaderboardController : MonoBehaviour
         GetLeaderboardAroundPlayerRequest request = new GetLeaderboardAroundPlayerRequest();
         request.StatisticName = RATING_KEY;
         request.MaxResultsCount = 5;
-        /*
-        request.ProfileConstraints = new PlayerProfileViewConstraints()
-        {
-            ShowStatistics = true
-        };
-        */
         PlayFabClientAPI.GetLeaderboardAroundPlayer(request, OnFetchOpponentsSuccess, OnNetworkError);
     }
     private void OnFetchOpponentsSuccess(GetLeaderboardAroundPlayerResult result)
@@ -105,6 +100,7 @@ public class LeaderboardController : MonoBehaviour
             PlayerLeaderboardEntry opponent = opponents[i];
             Opponent prefab = this.opponents[i];
 
+            string playfabId = opponent.PlayFabId;
             string displayName = opponent.DisplayName;
             int rating = opponent.StatValue;
             int power = 0; //TODO get power from leaderboard/data
@@ -115,7 +111,7 @@ public class LeaderboardController : MonoBehaviour
             PlayFabClientAPI.GetLeaderboardAroundPlayer(request, (GetLeaderboardAroundPlayerResult opponentResult) =>
             {
                 power = opponentResult.Leaderboard[0].StatValue;
-                prefab.SetName(displayName);
+                prefab.SetPlayer(playfabId, displayName);
                 prefab.SetRatingPower(rating, power);
             },
             OnNetworkError);
