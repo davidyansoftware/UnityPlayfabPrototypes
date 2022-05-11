@@ -17,10 +17,10 @@ public class Opponent : MonoBehaviour
         this.opponentName.text = opponentName;
     }
 
-    public void SetRankPower(string rating, string power)
+    public void SetRatingPower(int rating, int power)
     {
-        this.rating.text = rating;
-        this.power.text = power;
+        this.rating.text = rating.ToString();
+        this.power.text = power.ToString();
     }
 
     public void OnClick()

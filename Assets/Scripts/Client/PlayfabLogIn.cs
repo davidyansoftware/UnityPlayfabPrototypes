@@ -12,6 +12,15 @@ public class PlayfabLogIn
 
     private Action successCallback;
 
+    private string playfabId;
+    public string PlayfabId
+    {
+        get
+        {
+            return playfabId;
+        }
+    }
+
     //TODO use builder pattern to set these
     private GetPlayerCombinedInfoRequestParams infoRequestParams = new GetPlayerCombinedInfoRequestParams()
     {
@@ -76,9 +85,14 @@ public class PlayfabLogIn
     {
         Debug.Log(response.ToString());
 
-        // will be an error if account doesnt exist
+        //TODO will be an error if account doesnt exist
+        // noted in docs: GetPlayerProfile Has no effect for a new player
+        // https://docs.microsoft.com/en-us/rest/api/playfab/client/account-management/get-player-combined-info?view=playfab-rest#getplayercombinedinforequestparams
         string displayName = response.InfoResultPayload.PlayerProfile.DisplayName;
         Debug.Log("Display Name: " + displayName);
+
+        playfabId = response.PlayFabId;
+        Debug.Log("PlayfabId: " + playfabId);
 
         successCallback();
     }

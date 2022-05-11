@@ -1437,9 +1437,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1140867021}
-  opponent1: {fileID: 1681905810}
-  opponent2: {fileID: 782654672}
-  opponent3: {fileID: 1365674187}
+  opponents:
+  - {fileID: 1681905810}
+  - {fileID: 782654672}
+  - {fileID: 1365674187}
 --- !u!4 &1558769642
 Transform:
   m_ObjectHideFlags: 0

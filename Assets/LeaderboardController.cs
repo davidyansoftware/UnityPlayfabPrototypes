@@ -12,13 +12,12 @@ public class LeaderboardController : MonoBehaviour
 
     public Player player;
 
-    public Opponent opponent1;
-    public Opponent opponent2;
-    public Opponent opponent3;
+    public List<Opponent> opponents;
+
+    private PlayfabLogIn login = new PlayfabLogIn();
 
     private void Start()
     {
-        PlayfabLogIn login = new PlayfabLogIn();
         login.AnonymousLogin(OnLogIn);
     }
     private void OnLogIn()
@@ -70,13 +69,48 @@ public class LeaderboardController : MonoBehaviour
 
     private void FetchOpponents()
     {
-        //GetLeaderboardAroundPlayerRequest request = new GetLeaderboardAroundPlayerRequest();
-        //request.StatisticName = RATING_KEY;
-        //request.MaxResultsCount = 10;
+        GetLeaderboardAroundPlayerRequest request = new GetLeaderboardAroundPlayerRequest();
+        request.StatisticName = RATING_KEY;
+        request.MaxResultsCount = 5;
+        /*
+        request.ProfileConstraints = new PlayerProfileViewConstraints()
+        {
+            ShowStatistics = true
+        };
+        */
+        PlayFabClientAPI.GetLeaderboardAroundPlayer(request, OnFetchOpponentsSuccess, OnNetworkError);
     }
     private void OnFetchOpponentsSuccess(GetLeaderboardAroundPlayerResult result)
     {
+        // remove player from leaderboard
+        List<PlayerLeaderboardEntry> leaderboard = result.Leaderboard;
+        for (int i = leaderboard.Count - 1; i >= 0; i--)
+        {
+            
+            PlayerLeaderboardEntry entry = leaderboard[i];
+            if (entry.PlayFabId.Equals(login.PlayfabId)) {
+                leaderboard.RemoveAt(i);
+            }
+        }
 
+        // choose opponents
+        List<PlayerLeaderboardEntry> opponents = new List<PlayerLeaderboardEntry>();
+        opponents.Add(leaderboard[0]);
+        opponents.Add(leaderboard[leaderboard.Count / 2]);
+        opponents.Add(leaderboard[leaderboard.Count - 1]);
+        
+        // populate prefabs
+        for (int i = 0; i < opponents.Count; i++)
+        {
+            PlayerLeaderboardEntry opponent = opponents[i];
+            Opponent prefab = this.opponents[i];
+
+            string displayName = opponent.DisplayName;
+            int rating = opponent.StatValue;
+            int power = 0; //TODO get power from leaderboard/data
+            prefab.SetName(displayName);
+            prefab.SetRatingPower(rating, power);
+        }
     }
 
     private void FetchOpponent()
@@ -86,6 +120,6 @@ public class LeaderboardController : MonoBehaviour
 
     private void OnNetworkError(PlayFabError error)
     {
-        Debug.Log(error);
+        Debug.LogError(error);
     }
 }
