@@ -12,6 +12,12 @@ public class PlayfabLogIn
 
     private Action successCallback;
 
+    //TODO use builder pattern to set these
+    private GetPlayerCombinedInfoRequestParams infoRequestParams = new GetPlayerCombinedInfoRequestParams()
+    {
+        GetPlayerProfile = true
+    };
+
     public void AnonymousLogin(Action successCallback)
     {
         Debug.Log("[ClientStartUp].LoginRemoteUser");
@@ -24,7 +30,8 @@ public class PlayfabLogIn
         {
             TitleId = PlayFabSettings.TitleId,
             CreateAccount = true,
-            AndroidDeviceId = GetDeviceId()
+            AndroidDeviceId = GetDeviceId(),
+            InfoRequestParameters = infoRequestParams
         };
 
         PlayFabClientAPI.LoginWithAndroidDeviceID(request, OnLoginSuccess, OnLoginError);
@@ -33,7 +40,8 @@ public class PlayfabLogIn
         {
             TitleId = PlayFabSettings.TitleId,
             CreateAccount = true,
-            DeviceId = GetDeviceId()
+            DeviceId = GetDeviceId(),
+            InfoRequestParameters = infoRequestParams
         };
 
         PlayFabClientAPI.LoginWithIOSDeviceID(request, OnLoginSuccess, OnLoginError);
@@ -42,7 +50,8 @@ public class PlayfabLogIn
         {
             TitleId = PlayFabSettings.TitleId,
             CreateAccount = true,
-            CustomId = GetDeviceId()
+            CustomId = GetDeviceId(),
+            InfoRequestParameters = infoRequestParams
         };
 
         PlayFabClientAPI.LoginWithCustomID(request, OnLoginSuccess, OnLoginError);
@@ -66,6 +75,10 @@ public class PlayfabLogIn
     private void OnLoginSuccess(LoginResult response)
     {
         Debug.Log(response.ToString());
+
+        // will be an error if account doesnt exist
+        string displayName = response.InfoResultPayload.PlayerProfile.DisplayName;
+        Debug.Log("Display Name: " + displayName);
 
         successCallback();
     }

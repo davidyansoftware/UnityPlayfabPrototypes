@@ -319,7 +319,7 @@ GameObject:
   - component: {fileID: 624194381}
   - component: {fileID: 624194380}
   m_Layer: 5
-  m_Name: Rank
+  m_Name: Rating
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -377,7 +377,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Rank
+  m_Text: Rating
 --- !u!222 &624194381
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -635,7 +635,7 @@ GameObject:
   - component: {fileID: 747896847}
   - component: {fileID: 747896846}
   m_Layer: 5
-  m_Name: Rank
+  m_Name: Rating
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -693,7 +693,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Rank
+  m_Text: Rating
 --- !u!222 &747896847
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -714,7 +714,7 @@ GameObject:
   - component: {fileID: 748978442}
   - component: {fileID: 748978441}
   m_Layer: 5
-  m_Name: Rank
+  m_Name: Rating
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -772,7 +772,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Rank
+  m_Text: Rating
 --- !u!222 &748978442
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -836,8 +836,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1140867021}
-  rank: {fileID: 1693069883}
   opponentName: {fileID: 646315717}
+  rating: {fileID: 1693069883}
   power: {fileID: 1754063462}
 --- !u!114 &782654673
 MonoBehaviour:
@@ -1024,9 +1024,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9e85600cccdd704bb491f462ea8c055, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rank: {fileID: 0}
-  opponentName: {fileID: 0}
-  power: {fileID: 0}
+  playerName: {fileID: 1683713776}
+  rating: {fileID: 748978441}
+  power: {fileID: 662609078}
 --- !u!1 &1228437208
 GameObject:
   m_ObjectHideFlags: 0
@@ -1244,8 +1244,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1140867021}
-  rank: {fileID: 624194380}
   opponentName: {fileID: 743413145}
+  rating: {fileID: 624194380}
   power: {fileID: 218300304}
 --- !u!114 &1365674188
 MonoBehaviour:
@@ -1682,8 +1682,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1140867021}
-  rank: {fileID: 747896846}
   opponentName: {fileID: 1660910017}
+  rating: {fileID: 747896846}
   power: {fileID: 1228437210}
 --- !u!1 &1683713774
 GameObject:
@@ -1776,7 +1776,7 @@ GameObject:
   - component: {fileID: 1693069884}
   - component: {fileID: 1693069883}
   m_Layer: 5
-  m_Name: Rank
+  m_Name: Rating
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1834,7 +1834,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Rank
+  m_Text: Rating
 --- !u!222 &1693069884
 CanvasRenderer:
   m_ObjectHideFlags: 0

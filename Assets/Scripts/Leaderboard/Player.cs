@@ -5,14 +5,19 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
-    public Text rank;
-    public Text opponentName;
+    public Text playerName;
+
+    public Text rating;
     public Text power;
 
-    public void Setup(int rank, string opponentName, int power)
+    public void SetName(string playerName)
     {
-        this.rank.text = rank.ToString();
-        this.opponentName.text = opponentName;
+        this.playerName.text = playerName;
+    }
+
+    public void SetRatingPower(int rating, int power)
+    {
+        this.rating.text = rating.ToString();
         this.power.text = power.ToString();
     }
 }

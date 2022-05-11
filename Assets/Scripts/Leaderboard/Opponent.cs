@@ -7,15 +7,20 @@ public class Opponent : MonoBehaviour
 {
     public Player player;
 
-    public Text rank;
     public Text opponentName;
+
+    public Text rating;
     public Text power;
 
-    public void Setup(int rank, string opponentName, int power)
+    public void SetName(string opponentName)
     {
-        this.rank.text = rank.ToString();
         this.opponentName.text = opponentName;
-        this.power.text = power.ToString();
+    }
+
+    public void SetRankPower(string rating, string power)
+    {
+        this.rating.text = rating;
+        this.power.text = power;
     }
 
     public void OnClick()
