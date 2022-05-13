@@ -7,9 +7,6 @@ using PlayFab.ClientModels;
 
 public class PlayfabLogIn
 {
-    // randomly generated custom id for editor account
-    private static string EDITOR_ACCOUNT_CUSTOM_ID = "627307E8-4824174-340F9CF8-2CC2CDCC-1C15CCB6";
-
     private Action successCallback;
 
     private string playfabId;
