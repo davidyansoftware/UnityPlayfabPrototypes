@@ -19,9 +19,8 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void SetPlayer(string playfabId, string playerName)
+    public void SetPlayer(string playerName)
     {
-        this.playfabId = playfabId;
         this.playerName.text = playerName;
     }
 

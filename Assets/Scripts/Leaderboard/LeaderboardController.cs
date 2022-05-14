@@ -16,30 +16,21 @@ public class LeaderboardController : MonoBehaviour
 
     private PlayfabLogIn login = new PlayfabLogIn();
 
+    private void DrawDisplayName(string name)
+    {
+        player.SetPlayer(name);
+    }
+
     private void Start()
     {
+        login.WithDisplayId(DrawDisplayName);
         login.AnonymousLogin(OnLogIn);
     }
     private void OnLogIn()
     {
-        //TODO this should be handled on login and stored
-        FetchDisplayName();
-
         FetchPlayer();
 
         FetchOpponents();
-    }
-    
-    private void FetchDisplayName()
-    {
-        GetAccountInfoRequest request = new GetAccountInfoRequest();
-        PlayFabClientAPI.GetAccountInfo(request, DrawPlayerName, OnNetworkError);
-    }
-    private void DrawPlayerName(GetAccountInfoResult result)
-    {
-        string playfabId = result.AccountInfo.PlayFabId;
-        string displayName = result.AccountInfo.TitleInfo.DisplayName;
-        player.SetPlayer(playfabId, displayName);
     }
 
     private void FetchPlayer()

@@ -5,6 +5,8 @@ using UnityEngine;
 using PlayFab;
 using PlayFab.ClientModels;
 
+public delegate void HandleDisplayName(string name);
+
 public class PlayfabLogIn
 {
     private Action successCallback;
@@ -19,10 +21,24 @@ public class PlayfabLogIn
     }
 
     //TODO use builder pattern to set these
-    private GetPlayerCombinedInfoRequestParams infoRequestParams = new GetPlayerCombinedInfoRequestParams()
+    private GetPlayerCombinedInfoRequestParams infoRequestParams = new GetPlayerCombinedInfoRequestParams();
+    private HandleDisplayName displayNameHandler;
+
+    public void WithDisplayId(HandleDisplayName handler)
     {
-        GetPlayerProfile = true
-    };
+        infoRequestParams.GetPlayerProfile = true;
+        displayNameHandler = handler;
+    }
+
+    private void HandleLoginData(LoginResult result)
+    {
+        Debug.Log(result.ToString());
+
+        //TODO will be an error if account doesnt exist
+        // noted in docs: GetPlayerProfile Has no effect for a new player
+        // https://docs.microsoft.com/en-us/rest/api/playfab/client/account-management/get-player-combined-info?view=playfab-rest#getplayercombinedinforequestparams
+        displayNameHandler?.Invoke(result.InfoResultPayload.PlayerProfile.DisplayName);
+    }
 
     public void AnonymousLogin(Action successCallback)
     {
@@ -80,14 +96,9 @@ public class PlayfabLogIn
 
     private void OnLoginSuccess(LoginResult response)
     {
-        Debug.Log(response.ToString());
+        HandleLoginData(response);
 
-        //TODO will be an error if account doesnt exist
-        // noted in docs: GetPlayerProfile Has no effect for a new player
-        // https://docs.microsoft.com/en-us/rest/api/playfab/client/account-management/get-player-combined-info?view=playfab-rest#getplayercombinedinforequestparams
-        string displayName = response.InfoResultPayload.PlayerProfile.DisplayName;
-        Debug.Log("Display Name: " + displayName);
-
+        //TODO make this static? would that cause issues?
         playfabId = response.PlayFabId;
         Debug.Log("PlayfabId: " + playfabId);
 
