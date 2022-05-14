@@ -24,38 +24,20 @@ public class LeaderboardController : MonoBehaviour
     private void Start()
     {
         login.WithDisplayId(DrawDisplayName);
+        login.WithPlayerStatistics(DrawPlayerRankPower);
         login.AnonymousLogin(OnLogIn);
     }
     private void OnLogIn()
     {
-        FetchPlayer();
-
         FetchOpponents();
     }
 
-    private void FetchPlayer()
+    private void DrawPlayerRankPower(Dictionary<string, int> statistics)
     {
-        GetPlayerStatisticsRequest request = new GetPlayerStatisticsRequest();
-        request.StatisticNames = DATA_KEYS;
-        PlayFabClientAPI.GetPlayerStatistics(request, DrawPlayerRankPower, OnNetworkError);
-    }
-    private void DrawPlayerRankPower(GetPlayerStatisticsResult result)
-    {
-        //TODO find a better way to handle these defaults
-        int rating = 1000;
-        int power = 0;
+        //TODO find a better way to handle these defaults. title data?
+        int rating = statistics.ContainsKey(RATING_KEY) ? statistics[RATING_KEY] : 1000;
+        int power = statistics.ContainsKey(POWER_KEY) ? statistics[POWER_KEY] : 0;
 
-        foreach(StatisticValue statistic in result.Statistics)
-        {
-            if (statistic.StatisticName.Equals(RATING_KEY))
-            {
-                rating = statistic.Value;
-            }
-            if (statistic.StatisticName.Equals(POWER_KEY))
-            {
-                power = statistic.Value;
-            }
-        }
         player.SetRatingPower(rating, power);
     }
 

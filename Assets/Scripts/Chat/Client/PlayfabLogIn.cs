@@ -5,8 +5,6 @@ using UnityEngine;
 using PlayFab;
 using PlayFab.ClientModels;
 
-public delegate void HandleDisplayName(string name);
-
 public class PlayfabLogIn
 {
     private Action successCallback;
@@ -22,12 +20,19 @@ public class PlayfabLogIn
 
     //TODO use builder pattern to set these
     private GetPlayerCombinedInfoRequestParams infoRequestParams = new GetPlayerCombinedInfoRequestParams();
-    private HandleDisplayName displayNameHandler;
+    private Action<string> displayNameHandler;
+    private Action<Dictionary<string, int>> statisticsHandler;
 
-    public void WithDisplayId(HandleDisplayName handler)
+    public void WithDisplayId(Action<string> handler)
     {
         infoRequestParams.GetPlayerProfile = true;
         displayNameHandler = handler;
+    }
+
+    public void WithPlayerStatistics(Action<Dictionary<string, int>> handler)
+    {
+        infoRequestParams.GetPlayerStatistics = true;
+        statisticsHandler = handler;
     }
 
     private void HandleLoginData(LoginResult result)
@@ -38,6 +43,16 @@ public class PlayfabLogIn
         // noted in docs: GetPlayerProfile Has no effect for a new player
         // https://docs.microsoft.com/en-us/rest/api/playfab/client/account-management/get-player-combined-info?view=playfab-rest#getplayercombinedinforequestparams
         displayNameHandler?.Invoke(result.InfoResultPayload.PlayerProfile.DisplayName);
+
+        if (statisticsHandler != null)
+        {
+            Dictionary<string, int> statistics = new Dictionary<string, int>();
+            foreach(StatisticValue statistic in result.InfoResultPayload.PlayerStatistics)
+            {
+                statistics.Add(statistic.StatisticName, statistic.Value);
+            }
+            statisticsHandler.Invoke(statistics);
+        }
     }
 
     public void AnonymousLogin(Action successCallback)
