@@ -7,6 +7,7 @@ using PlayFab.CloudScriptModels;
 
 public class Opponent : MonoBehaviour
 {
+    public LeaderboardController controller;
     public Player player;
 
     public Text opponentName;
@@ -56,6 +57,8 @@ public class Opponent : MonoBehaviour
                 }
                 Debug.Log($"The {result.FunctionName} function took {result.ExecutionTimeMilliseconds} to complete");
                 Debug.Log($"Result: {result.FunctionResult.ToString()}");
+
+                controller.Redraw();
             },
             (PlayFabError error) => {
                 Debug.Log($"Opps Something went wrong: {error.GenerateErrorReport()}");

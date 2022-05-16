@@ -835,6 +835,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c13e04f73cf0da47bb5f9c1c1c430e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controller: {fileID: 1558769641}
   player: {fileID: 1140867021}
   opponentName: {fileID: 646315717}
   rating: {fileID: 1693069883}
@@ -1243,6 +1244,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c13e04f73cf0da47bb5f9c1c1c430e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controller: {fileID: 1558769641}
   player: {fileID: 1140867021}
   opponentName: {fileID: 743413145}
   rating: {fileID: 624194380}
@@ -1682,6 +1684,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c13e04f73cf0da47bb5f9c1c1c430e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controller: {fileID: 1558769641}
   player: {fileID: 1140867021}
   opponentName: {fileID: 1660910017}
   rating: {fileID: 747896846}

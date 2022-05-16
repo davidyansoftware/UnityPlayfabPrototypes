@@ -32,6 +32,13 @@ public class LeaderboardController : MonoBehaviour
         FetchOpponents();
     }
 
+    public void Redraw()
+    {
+        PlayfabFunctions.FetchPlayerStatistics(DATA_KEYS, DrawPlayerRankPower);
+
+        FetchOpponents();
+    }
+
     private void DrawPlayerRankPower(Dictionary<string, int> statistics)
     {
         //TODO find a better way to handle these defaults. title data?
@@ -76,18 +83,15 @@ public class LeaderboardController : MonoBehaviour
             string playfabId = opponent.PlayFabId;
             string displayName = opponent.DisplayName;
             int rating = opponent.StatValue;
-            int power = 0; //TODO get power from leaderboard/data
 
-            GetLeaderboardAroundPlayerRequest request = new GetLeaderboardAroundPlayerRequest();
-            request.StatisticName = POWER_KEY;
-            request.MaxResultsCount = 1;
-            PlayFabClientAPI.GetLeaderboardAroundPlayer(request, (GetLeaderboardAroundPlayerResult opponentResult) =>
-            {
-                power = opponentResult.Leaderboard[0].StatValue;
-                prefab.SetPlayer(playfabId, displayName);
-                prefab.SetRatingPower(rating, power);
-            },
-            OnNetworkError);
+            PlayfabFunctions.FetchOpponentStatistic(
+                POWER_KEY,
+                (int power) =>
+                {
+                    prefab.SetPlayer(playfabId, displayName);
+                    prefab.SetRatingPower(rating, power);
+                }
+            );
         }
     }
 
