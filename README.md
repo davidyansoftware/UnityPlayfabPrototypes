@@ -2,6 +2,18 @@
 
 A collection of proof-of-concepts for integrating Playfab and Unity.
 
+## Required
+
+Install Unity PlayFAb SDK here:
+
+https://docs.microsoft.com/en-us/gaming/playfab/sdks/unity3d/installing-unity3d-sdk
+
+https://github.com/PlayFab/UnitySDK
+
+Provide DeveloperSecretKey associated with PlayFab account:
+
+https://docs.microsoft.com/en-us/gaming/playfab/sdks/unity3d/installing-unity3d-sdk#set-your-title-settings
+
 # Simulated Battle/Leaderboard
 
 Uses playfab leaderboard system to create battle system between players.
